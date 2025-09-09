@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Račun za porabo električne energije</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header img {
+            width: 120px;
+            height: auto;
+        }
+        header h1 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        header p {
+            font-size: 14px;
+            color: #777;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #0056b3;
+            margin-bottom: 10px;
+        }
+        .section p {
+            font-size: 14px;
+            color: #555;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 13px; /* smaller font for table content */
+        }
+        table th, table td {
+            padding: 6px; /* slightly smaller padding to match font */
+            border: 1px solid #ddd;
+            text-align: right;
+        }
+        table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        .totals {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .flex-container { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .flex-container .section { width: 48%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <!-- Simple SVG logo -->
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="48" stroke="#0056b3" stroke-width="4" fill="#ffffff"/>
+            <polygon points="45,20 35,55 55,55 45,80 65,45 45,45"
+                    fill="#f2c500"/>
+        </svg>
+
+        <div style="margin-left: 15px; text-align: left;">
+            <h1 style="margin: 0; font-size: 24px;">Račun za porabo električne energije</h1>
+            <p style="font-size: 14px; color: #777; margin: 2px 0 0 0;">
+                Podjetje d.o.o. | Dunajska 167, Ljubljana | info@podjetje.si
+            </p>
+        </div>
+    </header>
+
+
+    <div class="flex-container">
+        <div class="section">
+            <h2>Podatki o uporabniku</h2>
+            <p>{{ customer.name }}</p>
+            <p>{{ customer.address }}</p>
+        </div>
+
+        <div class="section">
+            <p><strong>Izdato:</strong> {{ invoice.created_at }}</p>
+            <p><strong>Številka kupca:</strong> {{ customer.id }}</p>
+            <p><strong>Številka računa:</strong> {{ invoice.id }}</p>
+            <p><strong>Za obdobje:</strong> {{ period.start }} – {{ period.end }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Podrobnosti porabe</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Obdobje od</th>
+                    <th>Obdobje do</th>
+                    <th>Poraba</th>
+                    <th>Enota</th>
+                    <th>Cena v EUR</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for meter in meters %}
+                <tr>
+                    <td>Števec {{ meter.meter_id }}</td>
+                    <td>{{ period.start }}</td>
+                    <td>{{ period.end }}</td>
+                    <td>{{ "%.3f"|format(meter.usage) }}</td>
+                    <td>kWh</td>
+                    <td>{{ "%.2f"|format(meter.cost) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <p class="totals">Skupaj osnova za DDV : {{ "%.2f"|format(total_cost) }} EUR</p>
+        <p class="totals">Znesek DDV 22 % : {{ "%.3f"|format(total_usage) }} EUR</p>
+        <p class="totals">Skupaj račun : {{ "%.3f"|format(total_usage) }} EUR</p>
+    </div>
+
+    <footer>
+        <p>Hvala, da uporabljate naše storitve!</p>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -1,2 +1,9 @@
 fastapi
 uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+sqlmodel
+python-multipart
+jinja2
+weasyprint
+pandas

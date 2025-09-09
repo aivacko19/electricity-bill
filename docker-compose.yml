@@ -1,12 +1,27 @@
 version: "3.9"
 
 services:
+  db:
+    image: postgres:15
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   web:
     build: .
     container_name: fastapi_app
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-    environment:
-      - ENV=development
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
